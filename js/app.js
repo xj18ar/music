@@ -12,5 +12,6 @@
   }
 
   window.app = new clsApp();
-  window.app.init()
+
+  console.log("clsApp loaded!")
 })()
