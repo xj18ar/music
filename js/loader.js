@@ -1,5 +1,7 @@
 function Loader()
 {
+  var me = this;
+
   this.initialize = function (arDependencies, callback)
   {
     console.log("New instance of " + this.constructor.name);
@@ -10,14 +12,21 @@ function Loader()
     this.callback = callback;
     this.arDep = arDependencies || [];
 
+    if (window.appVersion == undefined){
+      this.importVersion(this.initialize.bind(this));
+      return
+    }
+
     if (arDependencies == undefined)
     {
-      this.getDependencies(this.start);
+      this.getDependencies(this.initialize.bind(this));
       return
     }
 
     this.start();
   }
+
+
 
   this.start = function ()
   {
@@ -34,6 +43,16 @@ function Loader()
     {
       this.callback();
     }
+  }
+
+  this.getDependencies = function(callback)
+  {
+
+
+  }
+
+  this.getVersion = function(callback){
+    this.importJS('./version.js')
   }
 
   this.importNext = function importNext()
@@ -61,8 +80,12 @@ function Loader()
       if (callback) { callback() }
       return
     }
-
-    url = url + '?v=' + window.appVersion
+    let v = window.appVersion
+    if (window.appVersion == undefined){
+      v = new Date().getTime();
+    }
+    
+    url = url + '?v=' + v
 
     console.log("Importing... " + url)
 
