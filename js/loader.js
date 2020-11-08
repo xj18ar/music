@@ -1,111 +1,118 @@
-/**
- * Class MainLoader. Gestiona las descargas de dependencias y las traduces
- *
- * Constructor: 
- *
- * @param {Arrayy} 		arDependencies 	- Una lista de urls.
- * @param {Function} 	callback 		- Se ejecuta se han descargado todos las dependencias
- *
- * @returns <undefined> 
- */
+function Loader()
+{
+  this.initialize = function (arDependencies, callback)
+  {
+    console.log("New instance of " + this.constructor.name);
 
-class MainLoader{
+    this.currentIndex = -1;
+    this.arDep = [];
 
-	constructor( arDependencies, callback ){
+    this.callback = callback;
+    this.arDep = arDependencies || [];
 
-		console.log("New instance of "+this.constructor.name);
+    if (arDependencies == undefined)
+    {
+      this.getDependencies(this.start);
+      return
+    }
 
-		this.currentIndex = -1;
-		this.arDep 		 		= [];
+    this.start();
+  }
 
-		this.callback = callback;
-		this.arDep    = arDependencies || [];
+  this.start = function ()
+  {
 
-		this.start();
-	}
+    console.log("started " + this.constructor.name);
 
-	start(){
+    this.importNext();
+  }
 
-		console.log("started "+this.constructor.name);
+  this.dependenciesImported = function dependenciesImported()
+  {
 
-		this.importNext();
-	}
+    if (typeof this.callback == "function")
+    {
+      this.callback();
+    }
+  }
 
-	dependenciesImported(){
+  this.importNext = function importNext()
+  {
 
-		if (typeof this.callback == "function"){
-			this.callback();
-		}
-	}
+    this.currentIndex++;
 
-	importNext(){
+    if (this.currentIndex >= this.arDep.length)
+    {
+      console.log("Imported all dependencies");
+      this.dependenciesImported()
+      return
+    }
+    var url = this.arDep[this.currentIndex];
 
-		this.currentIndex++;
+    this.importJS(url, this.importNext.bind(this));
+  }
 
-		if (this.currentIndex >= this.arDep.length){
-			console.log("Imported all dependencies");
-			this.dependenciesImported()
-			return
-		}
-		var url = this.arDep[this.currentIndex];
 
-		this.importJS(url, this.importNext.bind(this));
-	}
+  this.importJS = function importJS(url, callback)
+  {
 
-	
-	importJS(url, callback){
+    if (!url)
+    {
+      if (callback) { callback() }
+      return
+    }
 
-		if (!url) {
-			if (callback){ callback() }
-			return
-		}
+    url = url + '?v=' + window.appVersion
 
-		url = url + '?v=' + window.appVersion
+    console.log("Importing... " + url)
 
-		console.log("Importing... "+url)
+    this.request(url, function (response, error)
+    {
 
-		this.request(url,function(response, error){
+      if (error)
+      {
+        console.log("Error on load: " + url, error);
+        callback();
+        return
+      }
 
-			if (error){
-				console.log("Error on load: "+url, error);
-				callback();
-				return
-			}
+      var scr = document.createElement('script');
 
-			var scr  = document.createElement('script');
-			
-			scr.id   = "script_"+url.substring(url.lastIndexOf('/')+1)
-			scr.text = response;
+      scr.id = "script_" + url.substring(url.lastIndexOf('/') + 1)
+      scr.text = response;
 
-			document.head.appendChild(scr);
+      document.head.appendChild(scr);
 
-			if (typeof callback != "undefined"){
-				callback(scr); 
-			}
+      if (typeof callback != "undefined")
+      {
+        callback(scr);
+      }
 
-			console.log("\tImported "+url)
-		})
-	}
+      console.log("\tImported " + url)
+    })
+  }
 
-	request(url, callback){
+  this.request = function request(url, callback)
+  {
 
-		const xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
-		xhr.onload = function () { 
+    xhr.onload = function ()
+    {
 
-			var error = null
-			if (typeof callback != "undefined"){
-				if (this.status != 200){
-					error = this.status + " - " +this.statusText
-				}
-				callback(this.responseText, error); 
-			}
-		};
+      var error = null
+      if (typeof callback != "undefined")
+      {
+        if (this.status != 200)
+        {
+          error = this.status + " - " + this.statusText
+        }
+        callback(this.responseText, error);
+      }
+    };
 
-		xhr.open('GET', url, true);
-		xhr.send();
-	}
+    xhr.open('GET', url, true);
+    xhr.send();
+  }
 
 }
-
-window.appVersion = window.appVersion || (new Date().getTime()/1000).toFixed(0);
