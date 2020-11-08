@@ -53,7 +53,7 @@ function Loader()
 
   }
 
-  this.getVersion = function(callback){
+  this.importVersion = function(callback){
     this.importJS('./version.js')
   }
 
