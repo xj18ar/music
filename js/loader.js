@@ -12,6 +12,8 @@ function Loader()
     this.callback = callback;
     this.arDep = arDependencies || [];
 
+    debugger
+
     if (window.appVersion == undefined){
       this.importVersion(this.initialize.bind(this));
       return
@@ -84,7 +86,7 @@ function Loader()
     if (window.appVersion == undefined){
       v = new Date().getTime();
     }
-    
+
     url = url + '?v=' + v
 
     console.log("Importing... " + url)
