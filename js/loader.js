@@ -12,12 +12,14 @@ function Loader()
     this.callback = callback;
     this.arDep = arDependencies || [];
 
-    debugger
 
     if (window.appVersion == undefined){
-      this.importVersion(this.initialize.bind(this));
+      this.importJS('./version.js', this.initialize.bind(this))
       return
     }
+
+    debugger
+
 
     if (arDependencies == undefined)
     {
@@ -49,12 +51,14 @@ function Loader()
 
   this.getDependencies = function(callback)
   {
-
+    this.importJS('./config/dependencies.js',function(){
+      debugger
+      callback(window.arGlobalDependencies)
+    })
 
   }
 
   this.importVersion = function(callback){
-    this.importJS('./version.js')
   }
 
   this.importNext = function importNext()
@@ -110,7 +114,7 @@ function Loader()
 
       if (typeof callback != "undefined")
       {
-        callback(scr);
+        callback();
       }
 
       console.log("\tImported " + url)
