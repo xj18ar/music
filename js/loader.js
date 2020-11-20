@@ -18,9 +18,6 @@ function Loader()
       return
     }
 
-    debugger
-
-
     if (arDependencies == undefined)
     {
       this.getDependencies(this.initialize.bind(this));
@@ -52,7 +49,6 @@ function Loader()
   this.getDependencies = function(callback)
   {
     this.importJS('./config/dependencies.js',function(){
-      debugger
       callback(window.arGlobalDependencies)
     })
 
