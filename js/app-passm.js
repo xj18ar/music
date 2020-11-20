@@ -10,43 +10,57 @@
   {
     var me = this;
 
-    var BUTTON = '<button id="a-btnAdd">+</button>';
+    //var BUTTON = '<button id="a-btnAdd" class="aa-widget">+</button>';
+
     var PANEL_BOTTOM = ''+
-    '<div id="a-divPanelBottom" class="panelHidden">'+
+    '<div id="a-divPanelBottom" class="panelHidden aa-widget">'+
     ' <div>'+
-    '   <div>URL</div>'+
+    '   <div><input id="a-inp" class="input aa-widget" placeholder="url"></div>'+
     ' </div>'+
+    BUTTON+
     '</div>';
 
     this.start = function ()
     {
       console.log("clsApp started!");
 
-      this.createButton();
       this.createPanelBottom();
+      this.getStyleOfPage()
     }
 
-    this.createButton = function ()
+    this.getStyleOfPage = function()
     {
-      $(document.body).append(BUTTON);
+      let widgets = $('.aa-widget');
 
-      this.btnAdd = $("#a-btnAdd");
-      this.btnAdd.click(this.btnAdd_click.bind(this));
+      let back = getComputedStyle(document.body).getPropertyValue('background-color');
+      let text = getComputedStyle(document.body).getPropertyValue('color');
+      
+      if (back != "rgba(0, 0, 0, 0)"){
+        widgets.css('background-color', back);
+      }
+      if (text != "rgba(0, 0, 0, 0)"){
+        widgets.css('color', text);
+      }
     }
+
 
     this.createPanelBottom = function()
     {
       $(document.body).append(PANEL_BOTTOM);
+
       this.panel_bottom = $("#a-divPanelBottom");
+      
+      this.btnAdd = $("#a-btnAdd");
+      this.btnAdd.click(this.btnAdd_click.bind(this));
     }
 
     this.btnAdd_click = function()
     {
       this.panel_bottom.toggleClass('panelHidden');
-      this.btnAdd.toggleClass('rotateButton');
     }
 
     this.start();
+    
   }
 
 })()
