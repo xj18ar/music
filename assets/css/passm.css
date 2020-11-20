@@ -1,0 +1,61 @@
+:root {
+  --plugin_verion: 1;
+  --aa-background: white;
+  --aa-text-color: #333;
+  --aa-border-color: #333;
+  --aa-input-border: #999;
+}
+
+* {
+  outline: none;
+}
+
+#a-divButton {
+  position: absolute;
+  font-size: 20px;
+}
+
+#a-btnAdd {
+  cursor: pointer;
+  position: absolute;
+  left: -30px;
+  bottom: 0px;
+  width: 30px;
+  height: 40px;
+  background: var(--aa-background);
+  color: var(--aa-text-color);
+  font-size: 34px;
+  line-height: 6px;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  box-shadow: 0 0 5px #707070;
+  transition: all 400ms;
+}
+
+#a-divPanelBottom {
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  height: 300px;
+  width: calc(380px);
+  transition: all 400ms;
+  box-shadow: 0 0 2px var( --aa-border-color);
+  background: var(--aa-background);
+  padding: 10px;
+  box-shadow: 0 0 5px #ababab;
+}
+
+.panelHidden {
+  right: -402px !important;
+}
+
+.rotateButton {
+  transform: rotate(45deg);
+}
+
+.input {
+  border: 1px solid var(--aa-input-border);
+  font-size: 17px;
+  width: calc(100% - 10px);
+  padding: 4px;
+}
